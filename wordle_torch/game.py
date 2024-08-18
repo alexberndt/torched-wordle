@@ -1,30 +1,23 @@
 import random
 from typing import List
 from pathlib import Path
-from wordle_torch.utils import read_file
-from wordle_torch.response import Response as r
+from wordle_torch.response import Response
 import numpy as np
 
 class WordleGame:
-    def __init__(self, answer : str = None):
+    def __init__(self, guesses: list[str], answers: list[str], solution: str):
+        self.valid_guesses = guesses
+        self.possible_solutions = answers
 
-        root_dir = Path(__file__).resolve().parents[2]
-        guesses_file = root_dir / 'assets/guesses'
-        self.guesses = read_file(guesses_file)
+        if solution not in self.possible_solutions:
+            raise Exception(f"Answer '{solution}' not a valid answer word ...")
+        self.answer = solution
 
-        answers_file = root_dir / 'assets/wordlist'
-        self.answers = read_file(answers_file)
-
-        if answer not in self.answers:
-            raise Exception(f"Answer '{answer}' not a valid answer word ...")
-
-        self.answer = random.choice(self.answers) if answer is None else answer
         self.guess_count = 0
 
+    def guess(self, guess_word : str) -> List[Response]:
 
-    def guess(self, guess_word : str) -> List[str]:
-
-        if guess_word not in self.guesses + self.answers:
+        if guess_word not in self.valid_guesses + self.possible_solutions:
             raise Exception(f"Guess '{guess_word}' not a valid guess word ...")
 
         response = self._analyze_guess(guess_word)
@@ -33,7 +26,7 @@ class WordleGame:
         return response
 
 
-    def _analyze_guess(self, guess_word : str, answer_word : str = None) -> List[r]:
+    def _analyze_guess(self, guess_word : str, answer_word : str = None) -> List[Response]:
 
         answer_word = self.answer if answer_word is None else answer_word
 
@@ -43,13 +36,13 @@ class WordleGame:
         green = np.zeros(5, dtype=bool)
         yellow = np.zeros(5, dtype=bool)
 
-        response = 5*[r.GREY]
+        response = 5*[Response.GREY]
 
         # find all the greens (right letter, right spot)
         for idx, char in enumerate(guess_wordlist):
             if char == answer_wordlist[idx]:
                 green[idx] = True
-                response[idx] = r.GREEN
+                response[idx] = Response.GREEN
 
         # find all the yellows (right letter, wrong spot) in remaining letters
         chars_seen = []
@@ -59,7 +52,7 @@ class WordleGame:
 
             if char in answer_wordlist[~green] and char not in chars_seen:
                 yellow[idx] = True
-                response[idx] = r.YELLOW
+                response[idx] = Response.YELLOW
                 chars_seen.append(char)
 
         return response
