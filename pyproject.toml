@@ -2,11 +2,15 @@
 name = "wordle-torch"
 version = "0.1.0"
 description = ""
-authors = ["Alex Berndt <berndtae@gmail.com>"]
+authors = [
+    "Alex Berndt <berndtae@gmail.com>",
+    "Michael Berndt <michael.berndt@gmail.com>",
+]
 
 [tool.poetry.dependencies]
-python = "3.9.7"
-numpy = "^1.22.2"
+python = "^3.11"
+numpy = "^1.22"
+pandas = "^2.2.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.1"
