@@ -1,4 +1,3 @@
-from pathlib import Path
 from wordle_torch.game import WordleGame
 from wordle_torch.utils import read_file
 

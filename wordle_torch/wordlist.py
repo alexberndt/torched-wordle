@@ -6,7 +6,7 @@ from typing import Iterable
 # import re
 import pandas as pd 
 from functools import partial 
-
+import time 
 class Predicate(Enum):
     green = 0
     yellow = 1
@@ -22,15 +22,21 @@ def main():
 
     df = pd.read_parquet("data/wordle-valid-answers.parquet")
     print(len(df))
-    print(df.columns)
 
-    # Add green, yellow, grey responses from Wordle gameplay
+    
+
+    # # Add green, yellow, grey responses from Wordle gameplay
     conditions = [
-        Condition(0, Predicate.green, "m"),
-        Condition(2, Predicate.yellow, "u"),
-        Condition(0, Predicate.yellow, "l")
+        Condition(0, Predicate.yellow, "t"),
+        Condition(1, Predicate.green, "r"),
+        Condition(4, Predicate.green, "e"),
+        # Condition(2, Predicate.yellow, "u"),
+        # Condition(1, Predicate.green, "u"),
+        # Condition(3, Predicate.green, "c"),
+        # Condition(4, Predicate.green, "h"),
+        # Condition(0, Predicate.yellow, "l"),
     ]
-    conditions += [Condition(0, Predicate.grey, letter) for letter in ["o", "n", "t", "a", "k", "e", "s"]]
+    conditions += [Condition(0, Predicate.grey, letter) for letter in ["a", "c"]]
 
     print(df.columns)
 
